@@ -1,0 +1,6 @@
+framework module Pods_Digitales_Lager_Digitales_LagerUITests {
+  umbrella header "Pods-Digitales_Lager-Digitales_LagerUITests-umbrella.h"
+
+  export *
+  module * { export * }
+}
