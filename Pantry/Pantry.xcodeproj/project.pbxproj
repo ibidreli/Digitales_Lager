@@ -190,6 +190,7 @@
 				F64716F527218D4400D29BE6 /* Frameworks */,
 				F64716F627218D4400D29BE6 /* Resources */,
 				0048336F37B43D9A44A0BDFF /* [CP] Embed Pods Frameworks */,
+				76ECEBDEBC7890C3811B20DE /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -231,6 +232,7 @@
 				F647170F27218D4800D29BE6 /* Frameworks */,
 				F647171027218D4800D29BE6 /* Resources */,
 				D1F0B65A122EED20ADF2A3E7 /* [CP] Embed Pods Frameworks */,
+				81442A983AB7B58385F3A221 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -332,6 +334,40 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Pantry/Pods-Pantry-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		76ECEBDEBC7890C3811B20DE /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Pantry/Pods-Pantry-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Pantry/Pods-Pantry-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Pantry/Pods-Pantry-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		81442A983AB7B58385F3A221 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Pantry-PantryUITests/Pods-Pantry-PantryUITests-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Pantry-PantryUITests/Pods-Pantry-PantryUITests-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Pantry-PantryUITests/Pods-Pantry-PantryUITests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		8A7BD6BF4F72A0349AFA57CB /* [CP] Check Pods Manifest.lock */ = {

@@ -8,8 +8,10 @@ target 'Pantry' do
   # Pods for Digitales_Lager
 pod 'Firebase/Core'
 pod 'Firebase/Auth'
-pod 'GoogleSignIn'
-
+pod 'Firebase/Database'
+pod 'Firebase/Storage'
+pod 'GoogleSignIn', '< 5.0.0'
+pod 'SDWebImageSwiftUI'
 
 
   target 'PantryTests' do

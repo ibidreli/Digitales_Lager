@@ -7,6 +7,7 @@
 
 import SwiftUI
 import FirebaseAuth
+import GoogleSignIn
 
 class AppViewModel: ObservableObject {
     
@@ -64,9 +65,11 @@ class AppViewModel: ObservableObject {
         
         self.signedIn = false
     }
+    
+    
 }
 
- 
+
 
 struct ContentView: View {
     @EnvironmentObject var viewModel: AppViewModel
@@ -145,6 +148,8 @@ struct SignInView: View {
                             .background(Color.blue)
                             .cornerRadius(8)
                     } )
+                    
+                
                     
                     NavigationLink("Create Account", destination: SignUpView())
                         .padding()

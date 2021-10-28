@@ -34,6 +34,8 @@ struct AboutView: View {
         VStack {
             Text("About Views")
             
+            
+            
             Button(action: {instanceContentView.signOut()}, label: {
                 Text("Sign Out")
                     .padding()

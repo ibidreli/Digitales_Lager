@@ -5,18 +5,32 @@
 //  Created by Elias Pulver on 11.10.21.
 //
 import CodeScanner
+import Firebase
 import SwiftUI
+import FirebaseDatabase
+import FirebaseStorage
+import SDWebImageSwiftUI
 
 struct ScanView: View {
     @State private var isShowingScanner = false
     @State var text = ""
+    @State var produkt = ""
+    @State private var imageURL = URL(string: "")
+    
     
     var body: some View {
         
         VStack {
+            WebImage(url: imageURL)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
             Text(text)
                 .padding()
-                .font(.system(size: 40))
+                .font(.system(size: 20))
+            
+            Text(produkt)
+                .padding()
+                .font(.system(size: 20))
         
             Button(action: {
                 self.isShowingScanner = true
@@ -50,8 +64,38 @@ struct ScanView: View {
             
         }
     }
+    
     func searchAfterNumber(){
-        print(self.text)
+        var ref: DatabaseReference!
+        ref = Database.database().reference()
+        
+        
+        let questionPostsRef = ref.child("gtin")
+        let query = questionPostsRef.queryOrdered(byChild: "Gtin_A").queryEqual(toValue: self.text)
+        query.observeSingleEvent(of: .value, with: {
+            snapshot in
+            for child in snapshot.children {
+                let childSnap = child as! DataSnapshot
+                let dict = childSnap.value as! [String: Any]
+                let cat = dict["Produkt"] as! String
+                let picture = dict["Picture-Name"] as! String
+                
+                
+                self.produkt = cat
+            }
+        })
+        let storageRef = Storage.storage().reference(withPath: "screen1.png")
+        
+        storageRef.downloadURL { (url, error) in
+            if error != nil {
+                print((error?.localizedDescription)!)
+                
+                return
+            }
+            
+                self.imageURL = url!
+        }
+        
         
     }
     
@@ -62,9 +106,11 @@ struct ScanView: View {
         switch result {
         case .success(let code):
             self.text = code
+            searchAfterNumber()
                     
         case .failure(let error):
             print("Scanning failed")
+            
         }
     }
 }
