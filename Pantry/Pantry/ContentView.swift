@@ -7,10 +7,12 @@
 
 import SwiftUI
 import FirebaseAuth
+import FirebaseDatabase
 import GoogleSignIn
 
 class AppViewModel: ObservableObject {
     
+    private let database = Database.database().reference()
     let auth = Auth.auth()
     
     @Published var signedIn = false
@@ -33,7 +35,9 @@ class AppViewModel: ObservableObject {
         }
     }
     
-    func signUp(email: String, password: String) {
+    func signUp(email: String, household: String, password: String) {
+        
+        
         auth.createUser(withEmail: email, password: password) { [weak self]                            result, error in
             guard result != nil, error == nil else {
                 return
@@ -42,9 +46,37 @@ class AppViewModel: ObservableObject {
             DispatchQueue.main.async {
                 self?.signedIn = true
             }
-        
         }
-    
+        let new_email = email
+        let new_email_corrected = new_email.replacingOccurrences(of: ".", with: ",")
+        
+        database.child("users").child(new_email_corrected).setValue(household)
+        
+        let reference_of_data = database.child("group").child(household).child("members")
+        
+        database.child("group").observeSingleEvent(of: .value, with: { (snapshot) in
+            
+            if snapshot.hasChild(household) {
+                let new_database = Database.database().reference()
+                print("the room exists")
+                new_database.child("group").child(household).child("members").child("number_of_users").getData(completion: {error, snapshot in guard error == nil else {
+                        print(error!.localizedDescription)
+                        return;
+                    }
+                    
+                    var number_of_users:Int = snapshot.value! as! Int
+                    number_of_users = number_of_users + 1
+                    print("number", number_of_users)
+                    reference_of_data.child("number_of_users").setValue(number_of_users)
+                    reference_of_data.child("user" + String(number_of_users)).setValue(email)
+                    
+                });
+            }
+            else {
+                reference_of_data.child("number_of_users").setValue(1)
+                reference_of_data.child("user1").setValue(email)
+            }
+        })
     }
     
     func resetEmail(resetEmail: String) {
@@ -179,6 +211,7 @@ struct SignInView: View {
 struct SignUpView: View {
     @State var email = ""
     @State var password = ""
+    @State var household = ""
     
     @EnvironmentObject var viewModel: AppViewModel
     
@@ -195,6 +228,12 @@ struct SignUpView: View {
                         .autocapitalization(.none)
                         .padding()
                         .background(Color(.secondarySystemBackground))
+                    
+                    TextField("Household Name", text: $household)
+                        .disableAutocorrection(true)
+                        .autocapitalization(.none)
+                        .padding()
+                        .background(Color(.secondarySystemBackground))
                         
                     SecureField("Password", text: $password)
                         .disableAutocorrection(true)
@@ -207,7 +246,7 @@ struct SignUpView: View {
                         guard !email.isEmpty, !password.isEmpty else {
                             return
                         }
-                        viewModel.signUp(email: email, password: password)
+                        viewModel.signUp(email: email, household: household, password: password)
                         
                     }, label: {
                         Text("Create Account")
