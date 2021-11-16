@@ -13,15 +13,15 @@ import SDWebImageSwiftUI
 
 struct ScanView: View {
     private let database = Database.database().reference()
-    @State var email = ""
     
+    @State var email = ""
     @State private var isShowingScanner = false
     @State var text = ""
+    
     @State var result = ""
     @State var produkt = ""
     @State var groupName = ""
     @State private var imageURL = URL(string: "")
-    
     
     var body: some View {
         
@@ -29,9 +29,7 @@ struct ScanView: View {
             WebImage(url: imageURL)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-            Text(text)
-                .padding()
-                .font(.system(size: 20))
+                .frame(width: 250)
             
             Text(produkt)
                 .padding()
@@ -40,24 +38,19 @@ struct ScanView: View {
             Button(action: {
                 self.isShowingScanner = true
                 
-                
             }, label: {
                 Text("Scan")
                     .foregroundColor(Color.white)
                     .frame(width: 200, height: 50)
-                    .background(Color.blue)
+                    .background(Color("ButtonColor"))
                     .cornerRadius(8)
-            } )
+            })
             .sheet(isPresented: $isShowingScanner) {
                 CodeScannerView(codeTypes: [.ean13, .ean8], completion: self.handleScan)
-            
             }
-            
-            
-            
-            
         }
     }
+    
     
     func searchAfterNumber(){
         var ref: DatabaseReference!
@@ -83,6 +76,8 @@ struct ScanView: View {
         
         let questionPostsRef = ref.child("gtin")
         let query = questionPostsRef.queryOrdered(byChild: "Gtin_A").queryEqual(toValue: self.text)
+        print("text" + self.text)
+        print(type(of: self.text))
         query.observeSingleEvent(of: .value, with: {
             snapshot in
             for child in snapshot.children {
@@ -110,7 +105,6 @@ struct ScanView: View {
                                 print(error!.localizedDescription)
                                 return;
                             }
-                            
                             var number_of_products:Int = snapshot.value! as! Int
                             number_of_products = number_of_products + 1
                             print("number", number_of_products)
@@ -119,7 +113,6 @@ struct ScanView: View {
                             
                             reference_of_data.child("product_name").setValue(cat)
                             reference_of_data.child("picture_path").setValue(picture + ".png")
-                        
                         });
                     }
                     else {
@@ -128,42 +121,33 @@ struct ScanView: View {
                         reference_of_data.child("product_name").setValue(cat)
                         
                         reference_of_data.child("picture_path").setValue(picture + ".png")
-                        
                     }
                 })
-
-                
                 self.produkt = cat
             }
         })
-        let storageRef = Storage.storage().reference(withPath: "screen1.png")
-        
-        storageRef.downloadURL { (url, error) in
-            if error != nil {
-                print((error?.localizedDescription)!)
-                
-                return
-            }
-            
-                self.imageURL = url!
-        }
-        
-        
     }
     
     
+    
     func handleScan(result: Result<String, CodeScannerView.ScanError>) {
+        
         self.isShowingScanner = false
         
         switch result {
-        case .success(let code):
-            self.text = code
-            searchAfterNumber()
-                    
-        case .failure(let error):
-            print("Scanning failed")
+            case .success(let code):
+                self.text = code
+                searchAfterNumber()
+                
+            
+                        
+            case .failure(let error):
+                print("Scanning failed")
+                
+                self.isShowingScanner = true
             
         }
+        
     }
 }
 

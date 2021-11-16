@@ -17,10 +17,10 @@ class AppViewModel: ObservableObject {
     
     @Published var signedIn = false
     
-    
     var isSignedIn: Bool {
         return auth.currentUser != nil
     }
+    
     
     func signIn(email: String, password: String) {
         auth.signIn(withEmail: email, password:  password) { [weak self]            result, error in
@@ -35,9 +35,8 @@ class AppViewModel: ObservableObject {
         }
     }
     
+    
     func signUp(email: String, household: String, password: String) {
-        
-        
         auth.createUser(withEmail: email, password: password) { [weak self]                            result, error in
             guard result != nil, error == nil else {
                 return
@@ -79,34 +78,33 @@ class AppViewModel: ObservableObject {
         })
     }
     
+    
     func resetEmail(resetEmail: String) {
         Auth.auth().sendPasswordReset(withEmail: resetEmail)
     }
         
         
-    
     func signOut(){
         try? auth.signOut()
+        print("signOut")
         
-        self.signedIn = false
         
     }
+    
     
     func deleteAccount(){
         auth.currentUser?.delete()
         
-        self.signedIn = false
+       print("deleteAccount")
     }
     
     
 }
 
 
-
 struct ContentView: View {
     @EnvironmentObject var viewModel: AppViewModel
    
-    
     var body: some View {
         NavigationView {
             if viewModel.signedIn {
@@ -115,6 +113,7 @@ struct ContentView: View {
                         .tabItem {
                             Image(systemName: "bag")
                             Text("Lager")
+                            
                         }
                     ScanView()
                         .tabItem {
@@ -126,7 +125,7 @@ struct ContentView: View {
                             Image(systemName: "info.circle")
                             Text("About")
                         }
-                }
+                }.accentColor(Color("ButtonColor"))
             }
             else {
                 SignInView()
@@ -143,67 +142,77 @@ struct ContentView: View {
 struct SignInView: View {
     @State var email = ""
     @State var password = ""
+    @State var error = ""
+    
     
     @EnvironmentObject var viewModel: AppViewModel
     
+    
     var body: some View {
-        
-            VStack {
+        VStack {
+                Text("Wilkommen bei Pantry")
+                .font(.system(size: 30).bold())
+            
+                Text("Ihr digitales Lebensmittellager")
+            
                 Image("logo")
                     .resizable()
                     .scaledToFit()
                     .frame(width: 150, height: 150)
                 VStack{
-                    TextField("Email Address", text: $email)
+                    TextField("Email Adresse", text: $email)
                         .disableAutocorrection(true)
                         .autocapitalization(.none)
                         .padding()
                         .background(Color(.secondarySystemBackground))
                         
-                    SecureField("Password", text: $password)
+                    SecureField("Passwort", text: $password)
                         .disableAutocorrection(true)
                         .autocapitalization(.none)
                         .padding()
                         .background(Color(.secondarySystemBackground))
                     
+                    Text(self.error)
+                        .foregroundColor(.red)
+                        .padding()
+                    
                     Button(action: {
+                        guard !email.isEmpty else {
+                            self.error = "Bitte geben sie eine Email Adresse ein!"
+                            return
+                        }
                         
-                        guard !email.isEmpty, !password.isEmpty else {
+                        guard !password.isEmpty else {
+                            self.error = "Bitte geben sie ein Passwort ein!"
                             return
                         }
                         viewModel.signIn(email: email, password: password)
                         
                     }, label: {
-                        Text("Sign In")
+                        Text("Anmelden")
                             .foregroundColor(Color.white)
-                            .frame(width: 200, height: 50)
-                            .background(Color.blue)
+                            .frame(width: 230, height: 50)
+                            .background(Color("ButtonColor"))
                             .cornerRadius(8)
                     } )
                     
-                
-                    
-                    NavigationLink("Create Account", destination: SignUpView())
+                    NavigationLink("Registrieren", destination: SignUpView())
                         .padding()
                         .foregroundColor(Color.white)
-                        .frame(width: 200, height: 50)
+                        .frame(width: 230, height: 50)
                         .background(Color.gray)
                         .cornerRadius(8)
                     
-                    NavigationLink("Reset Password", destination: PasswordResetView())
+                    NavigationLink("Passwort Zurücksetzen", destination: PasswordResetView())
                         .foregroundColor(Color.white)
-                        .frame(width: 200, height: 50)
+                        .frame(width: 230, height: 50)
                         .background(Color.gray)
                         .cornerRadius(8)
-                    
-                    
                 }
                 .padding()
                 
                 Spacer()
             }
-            .navigationTitle("Sign In")
-
         }
 }
 
@@ -212,47 +221,63 @@ struct SignUpView: View {
     @State var email = ""
     @State var password = ""
     @State var household = ""
+    @State var error = ""
     
     @EnvironmentObject var viewModel: AppViewModel
     
     var body: some View {
         
             VStack {
+                Text("Registrieren")
+                .font(.system(size: 30).bold())
+                
                 Image("logo")
                     .resizable()
                     .scaledToFit()
                     .frame(width: 150, height: 150)
                 VStack{
-                    TextField("Email Address", text: $email)
+                    TextField("Email Adresse", text: $email)
                         .disableAutocorrection(true)
                         .autocapitalization(.none)
                         .padding()
                         .background(Color(.secondarySystemBackground))
                     
-                    TextField("Household Name", text: $household)
+                    TextField("Haushalt", text: $household)
                         .disableAutocorrection(true)
                         .autocapitalization(.none)
                         .padding()
                         .background(Color(.secondarySystemBackground))
                         
-                    SecureField("Password", text: $password)
+                    SecureField("Passwort", text: $password)
                         .disableAutocorrection(true)
                         .autocapitalization(.none)
                         .padding()
                         .background(Color(.secondarySystemBackground))
+                    
+                    Text(self.error)
+                        .foregroundColor(.red)
+                        .padding()
                     
                     Button(action: {
-                        
-                        guard !email.isEmpty, !password.isEmpty else {
+                        guard !email.isEmpty else {
+                            self.error = "Bitte geben sie eine Email Adresse ein!"
+                            return
+                        }
+                        guard !household.isEmpty else {
+                            self.error = "Bitte geben sie ein Haushalt Name ein!"
+                            return
+                        }
+                        guard !password.isEmpty else {
+                            self.error = "Bitte geben sie ein Passwort ein!"
                             return
                         }
                         viewModel.signUp(email: email, household: household, password: password)
                         
                     }, label: {
-                        Text("Create Account")
+                        Text("Registrieren")
                             .foregroundColor(Color.white)
                             .frame(width: 200, height: 50)
-                            .background(Color.blue)
+                            .background(Color("ButtonColor"))
                             .cornerRadius(8)
                     } )
                 }
@@ -260,55 +285,61 @@ struct SignUpView: View {
                 
                 Spacer()
             }
-            .navigationTitle("Create Account")
+            
 
         }
 }
 
 struct PasswordResetView: View {
     @State var resetEmail = ""
+    @State var error = ""
     
     @EnvironmentObject var viewModel: AppViewModel
     
     var body: some View {
         
             VStack {
+
+                Text("Passwort zurücksetzen")
+                .font(.system(size: 30).bold())
+                
                 Image("logo")
                     .resizable()
                     .scaledToFit()
                     .frame(width: 150, height: 150)
                 VStack{
-                    TextField("Email Address", text: $resetEmail)
+                    TextField("Email Adresse", text: $resetEmail)
                         .disableAutocorrection(true)
                         .autocapitalization(.none)
                         .padding()
                         .background(Color(.secondarySystemBackground))
                         
+                    Text(self.error)
+                        .foregroundColor(.red)
+                        .padding()
                     
                     Button(action: {
                         
                         guard !resetEmail.isEmpty else {
+                            self.error = "Bitte geben sie eine Email Adresse ein!"
                             return
                         }
                         viewModel.resetEmail(resetEmail: resetEmail)
                         
                     }, label: {
-                        Text("Reset Password")
+                        Text("Passwort zurücksetzten")
                             .foregroundColor(Color.white)
-                            .frame(width: 200, height: 50)
-                            .background(Color.blue)
+                            .frame(width: 230, height: 50)
+                            .background(Color("ButtonColor"))
                             .cornerRadius(8)
                     } )
                 }
                 .padding()
-                
                 Spacer()
+                    
             }
-            .navigationTitle("Reset Password")
-
         }
 }
-    
     
 
 struct ContentView_Previews: PreviewProvider {

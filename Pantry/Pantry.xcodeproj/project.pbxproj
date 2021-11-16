@@ -23,7 +23,6 @@
 		F6471737272194D700D29BE6 /* CodeScanner in Frameworks */ = {isa = PBXBuildFile; productRef = F6471736272194D700D29BE6 /* CodeScanner */; };
 		F647173B272199C000D29BE6 /* Pantry-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F647173A272199C000D29BE6 /* Pantry-Info.plist */; };
 		F65CA5742722D48500D00B6E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F65CA5732722D48400D00B6E /* GoogleService-Info.plist */; };
-		F66E32EE272C1AB600AF1517 /* Stock.swift in Sources */ = {isa = PBXBuildFile; fileRef = F66E32ED272C1AB600AF1517 /* Stock.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -69,7 +68,6 @@
 		F647173A272199C000D29BE6 /* Pantry-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Pantry-Info.plist"; sourceTree = SOURCE_ROOT; };
 		F6573310272292EC00D0D613 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		F65CA5732722D48400D00B6E /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
-		F66E32ED272C1AB600AF1517 /* Stock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stock.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -156,7 +154,6 @@
 				F647172827218F1400D29BE6 /* ContentView.swift */,
 				F647172627218F1300D29BE6 /* ScanView.swift */,
 				F647172727218F1300D29BE6 /* StockView.swift */,
-				F66E32ED272C1AB600AF1517 /* Stock.swift */,
 				F647172A27218F1400D29BE6 /* Content.swift */,
 				F647172B27218F1400D29BE6 /* Assets.xcassets */,
 				F647172527218F1300D29BE6 /* Preview Content */,
@@ -466,7 +463,6 @@
 				F647172F27218F1500D29BE6 /* ContentView.swift in Sources */,
 				F647173127218F1500D29BE6 /* Content.swift in Sources */,
 				F647172E27218F1500D29BE6 /* StockView.swift in Sources */,
-				F66E32EE272C1AB600AF1517 /* Stock.swift in Sources */,
 				F647173027218F1500D29BE6 /* AboutView.swift in Sources */,
 				F647172D27218F1500D29BE6 /* ScanView.swift in Sources */,
 			);
