@@ -13,9 +13,16 @@ import GoogleSignIn
 class AppViewModel: ObservableObject {
     
     private let database = Database.database().reference()
+    
+    
     let auth = Auth.auth()
     
     @Published var signedIn = false
+    
+    private var authStateHandle: AuthStateDidChangeListenerHandle?
+    init() {
+        authStateHandle = auth.addStateDidChangeListener({ _, user in self.signedIn = user != nil})
+    }
     
     var isSignedIn: Bool {
         return auth.currentUser != nil
@@ -87,15 +94,12 @@ class AppViewModel: ObservableObject {
     func signOut(){
         try? auth.signOut()
         print("signOut")
-        
-        
     }
     
     
     func deleteAccount(){
         auth.currentUser?.delete()
-        
-       print("deleteAccount")
+        print("deleteAccount")
     }
     
     
@@ -118,12 +122,12 @@ struct ContentView: View {
                     ScanView()
                         .tabItem {
                             Image(systemName: "barcode.viewfinder")
-                            Text("Scan")
+                            Text("Scannen")
                         }
                     AboutView()
                         .tabItem {
                             Image(systemName: "info.circle")
-                            Text("About")
+                            Text("Profil")
                         }
                 }.accentColor(Color("ButtonColor"))
             }
@@ -153,7 +157,7 @@ struct SignInView: View {
                 Text("Wilkommen bei Pantry")
                 .font(.system(size: 30).bold())
             
-                Text("Ihr digitales Lebensmittellager")
+                Text("Dein digitales Lebensmittellager")
             
                 Image("logo")
                     .resizable()
